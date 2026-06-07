@@ -15,6 +15,7 @@
 #include <vector>
 #include "light.h"
 #include "parser.h"
+#include "image_loader.h"
 
 using namespace std;
 
@@ -66,7 +67,7 @@ void SceneReader::GetSurface(pugi::xml_node &scene, std::vector<Surface *> &surf
         for (pugi::xml_node surface_type : surface_node.children())
         {
             Transform transform;
-            Matrix object_transform_matrix = Matrix::identity();
+            Matrix object_transform_matrix = Matrix::Identity();
             Material *current_material = nullptr;
 
             GetMaterial(surface_type, current_material);
@@ -130,7 +131,7 @@ void SceneReader::GetMaterial(pugi::xml_node &object, Material *&current_materia
             Phong{
                 ka,
                 kd,
-                kd,
+                ks,
                 exponent},
             reflectance_r,
             transmittance_t,
@@ -138,34 +139,36 @@ void SceneReader::GetMaterial(pugi::xml_node &object, Material *&current_materia
     }
     else if (textured_material)
     {
-        pugi::xml_node name_node = solid_material.child("texture");
+        pugi::xml_node name_node = textured_material.child("texture");
         string name = name_node.attribute("name").as_string();
-
-        pugi::xml_node phong_node = solid_material.child("phong");
+        pugi::xml_node phong_node = textured_material.child("phong");
         float ka = phong_node.attribute("ka").as_float();
         float kd = phong_node.attribute("kd").as_float();
         float ks = phong_node.attribute("ks").as_float();
         float exponent = phong_node.attribute("exponent").as_float();
 
-        pugi::xml_node reflectance_node = solid_material.child("reflectance");
+        pugi::xml_node reflectance_node = textured_material.child("reflectance");
         float reflectance_r = reflectance_node.attribute("r").as_float();
 
-        pugi::xml_node transmittance_node = solid_material.child("transmittance");
+        pugi::xml_node transmittance_node = textured_material.child("transmittance");
         float transmittance_t = transmittance_node.attribute("t").as_float();
 
-        pugi::xml_node refraction_node = solid_material.child("refraction");
+        pugi::xml_node refraction_node = textured_material.child("refraction");
         float refraction_iof = refraction_node.attribute("iof").as_float();
 
-        current_material = new Texture(
-            name,
-            Phong{
-                ka,
-                kd,
-                kd,
-                exponent},
-            reflectance_r,
-            transmittance_t,
-            refraction_iof);
+        Texture *newTexture = new Texture(name,
+                                          Phong{
+                                              ka,
+                                              kd,
+                                              ks,
+                                              exponent},
+                                          reflectance_r,
+                                          transmittance_t,
+                                          refraction_iof);
+
+        ImageLoader::LoadImage(name, *newTexture);
+
+        current_material = newTexture;
     }
 }
 

@@ -2,12 +2,12 @@
 
 Transform::Transform()
 {
-    transformationMatrix = Matrix::identity();
+    transformationMatrix = Matrix::Identity();
 }
 
 Matrix Transform::makeMatrixForTranslate(Vec3 translate)
 {
-    Matrix matrix = Matrix::identity();
+    Matrix matrix = Matrix::Identity();
     matrix.m[0][3] = translate.x();
     matrix.m[1][3] = translate.y();
     matrix.m[2][3] = translate.z();
@@ -16,7 +16,7 @@ Matrix Transform::makeMatrixForTranslate(Vec3 translate)
 
 Matrix Transform::makeMatrixForScale(Vec3 scale)
 {
-    Matrix matrix = Matrix::identity();
+    Matrix matrix = Matrix::Identity();
     matrix.m[0][0] = scale.x();
     matrix.m[1][1] = scale.y();
     matrix.m[2][2] = scale.z();
@@ -25,7 +25,7 @@ Matrix Transform::makeMatrixForScale(Vec3 scale)
 
 Matrix Transform::makeMatrixForXRotate(float angle)
 {
-    Matrix matrix = Matrix::identity();
+    Matrix matrix = Matrix::Identity();
     matrix.m[1][1] = cos(angle);
     matrix.m[1][2] = -sin(angle);
     matrix.m[2][1] = sin(angle);
@@ -35,7 +35,7 @@ Matrix Transform::makeMatrixForXRotate(float angle)
 
 Matrix Transform::makeMatrixForYRotate(float angle)
 {
-    Matrix matrix = Matrix::identity();
+    Matrix matrix = Matrix::Identity();
     matrix.m[0][0] = cos(angle);
     matrix.m[0][2] = sin(angle);
     matrix.m[2][0] = -sin(angle);
@@ -45,7 +45,7 @@ Matrix Transform::makeMatrixForYRotate(float angle)
 
 Matrix Transform::makeMatrixForZRotate(float angle)
 {
-    Matrix matrix = Matrix::identity();
+    Matrix matrix = Matrix::Identity();
     matrix.m[0][0] = cos(angle);
     matrix.m[0][1] = -sin(angle);
     matrix.m[1][0] = sin(angle);

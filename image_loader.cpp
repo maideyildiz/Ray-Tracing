@@ -1,18 +1,16 @@
 #include "image_loader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "texture.h"
 
-void ImageLoader::LoadImage(const std::string &obj_file_name)
+void ImageLoader::LoadImage(const std::string &png_file_name, Texture &texture)
 {
-    // int width, height, channels;
-    // unsigned char *img = stbi_load(obj_file_name, &width, &height, &channels, 4);
+    int channels;
 
-    // if (img)
-    // {
-    //     // r = img[(y * width + x) * 4 + 0];
-    //     // g = img[(y * width + x) * 4 + 1];
-    //     // b = img[(y * width + x) * 4 + 2];
+    texture.pixels = stbi_load(png_file_name.c_str(), &texture.width, &texture.height, &channels, 4);
 
-    //     stbi_image_free(img);
-    // }
+    if (!texture.pixels)
+    {
+        std::cout << "Image file couldn't be read!" << std::endl;
+    }
 }

@@ -14,7 +14,7 @@ int main()
     SceneReader sceneReader;
 
     Renderer renderer;
-    renderer.RenderScene(sceneReader.ReadScene("example5.xml"));
+    renderer.RenderScene(sceneReader.ReadScene("example7.xml"));
 
     return 0;
 }

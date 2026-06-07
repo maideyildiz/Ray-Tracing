@@ -22,7 +22,13 @@ void Parser::ParseObjFile(const std::string &obj_file_name, Mesh &mesh)
         std::stringstream ss(line);
         std::string type;
         ss >> type;
-
+        if (type == "vt")
+        {
+            float u, v;
+            ss >> u >> v;
+            mesh.u_coords.push_back(u);
+            mesh.v_coords.push_back(v);
+        }
         if (type == "v")
         {
             float x, y, z;
@@ -31,6 +37,22 @@ void Parser::ParseObjFile(const std::string &obj_file_name, Mesh &mesh)
                 mesh.vertices.push_back(Vec3(x, y, z));
             }
         }
+        // else if (type == "f")
+        // {
+        //     std::string vertex_data;
+        //     for (int i = 0; i < 3; ++i)
+        //     {
+        //         ss >> vertex_data;
+        //         std::stringstream ss_face(vertex_data);
+        //         std::string index_str;
+
+        //         std::getline(ss_face, index_str, '/');
+
+        //         int index = std::stoi(index_str);
+        //         mesh.face_indices.push_back(index > 0 ? index - 1 : 0);
+        //     }
+        // }
+
         else if (type == "f")
         {
             std::string vertex_data;
@@ -38,12 +60,17 @@ void Parser::ParseObjFile(const std::string &obj_file_name, Mesh &mesh)
             {
                 ss >> vertex_data;
                 std::stringstream ss_face(vertex_data);
-                std::string index_str;
+                std::string v_idx_str, vt_idx_str;
 
-                std::getline(ss_face, index_str, '/');
-
-                int index = std::stoi(index_str);
-                mesh.face_indices.push_back(index > 0 ? index - 1 : 0);
+                std::getline(ss_face, v_idx_str, '/');
+                if (std::getline(ss_face, vt_idx_str, '/'))
+                {
+                    if (!vt_idx_str.empty())
+                    {
+                        mesh.uv_indices.push_back(std::stoi(vt_idx_str) - 1);
+                    }
+                }
+                mesh.face_indices.push_back(std::stoi(v_idx_str) - 1);
             }
         }
     }
